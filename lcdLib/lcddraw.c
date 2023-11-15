@@ -4,6 +4,9 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 
+#define SCREEN_WIDTH  128  
+#define SCREEN_HEIGHT 160  
+
 
 /** Draw single pixel at x,row 
  *
@@ -35,6 +38,12 @@ void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height,
   while ((c++) < total) {
     lcd_writeColor(colorBGR);
   }
+}
+
+void triangle(int col, int row, int size) {
+  for(int c = -size; c<= size;c++)
+    for(int r = -size; r<=c; r++)
+      drawPixel(col+c, row+r, COLOR_PINK);
 }
 
 /** Clear screen (fill with color)
@@ -115,3 +124,52 @@ void drawRectOutline(u_char colMin, u_char rowMin, u_char width, u_char height,
   fillRectangle(colMin + width, rowMin, 1, height, colorBGR);
 }
 
+void partition();
+
+void quickSortAndVisualize(int array[], int low, int high) {
+  if (low < high) {
+    int pi = partition(array, low, high);
+    quickSortAndVisualize(array, low, pi - 1);
+    quickSortAndVisualize(array, pi + 1, high);
+
+    // Display the current state of the array
+    clearScreen(BLACK);
+    drawArray(array, ARRAY_SIZE);
+    delay(1000); // Adjust the delay as needed
+  }
+}
+
+int partition(int array[], int low, int high) {
+  // Choose the pivot (for simplicity, using the last element)
+  int pivot = array[high];
+  int i = low - 1;
+
+  for (int j = low; j <= high - 1; j++) {
+    if (array[j] < pivot) {
+      i++;
+      // Swap array[i] and array[j]
+      int temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  }
+
+  // Swap array[i+1] and array[high] (put the pivot element in the correct position)
+  int temp = array[i + 1];
+  array[i + 1] = array[high];
+  array[high] = temp;
+
+  return i + 1;
+}
+
+void drawArray(int array[], int size) {
+  // Assuming a simple horizontal bar representation
+  int barWidth = SCREEN_WIDTH / size;
+  for (int i = 0; i < size; i++) {
+    fillRectangle(i * barWidth, SCREEN_HEIGHT - array[i], barWidth, array[i], WHITE);
+  }
+}
+
+void delay(int milliseconds) {
+  __delay_cycles(milliseconds * 1000); // Adjust the delay function based on your clock speed
+}
