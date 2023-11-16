@@ -4,8 +4,9 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 
-#define SCREEN_WIDTH  128  
-#define SCREEN_HEIGHT 160  
+#define SCREEN_WIDTH  SHORT_EDGE_PIXELS // 128
+#define SCREEN_HEIGHT LONG_EDGE_PIXELS  //160
+#define ARRAY_SIZE 90
 
 
 /** Draw single pixel at x,row 
@@ -124,21 +125,6 @@ void drawRectOutline(u_char colMin, u_char rowMin, u_char width, u_char height,
   fillRectangle(colMin + width, rowMin, 1, height, colorBGR);
 }
 
-void partition();
-
-void quickSortAndVisualize(int array[], int low, int high) {
-  if (low < high) {
-    int pi = partition(array, low, high);
-    quickSortAndVisualize(array, low, pi - 1);
-    quickSortAndVisualize(array, pi + 1, high);
-
-    // Display the current state of the array
-    clearScreen(BLACK);
-    drawArray(array, ARRAY_SIZE);
-    delay(1000); // Adjust the delay as needed
-  }
-}
-
 int partition(int array[], int low, int high) {
   // Choose the pivot (for simplicity, using the last element)
   int pivot = array[high];
@@ -153,6 +139,10 @@ int partition(int array[], int low, int high) {
       array[j] = temp;
     }
   }
+
+
+
+
 
   // Swap array[i+1] and array[high] (put the pivot element in the correct position)
   int temp = array[i + 1];
@@ -173,3 +163,17 @@ void drawArray(int array[], int size) {
 void delay(int milliseconds) {
   __delay_cycles(milliseconds * 1000); // Adjust the delay function based on your clock speed
 }
+void quickSortAndVisualize(int array[], int low, int high) {
+  if (low < high) {
+    int pi = partition(array, low, high);
+    quickSortAndVisualize(array, low, pi - 1);
+    quickSortAndVisualize(array, pi + 1, high);
+
+    // Display the current state of the array
+    clearScreen(BLACK);
+    drawArray(array, ARRAY_SIZE);
+    delay(1000); // Adjust the delay as needed
+  }
+}
+
+
