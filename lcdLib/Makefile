@@ -19,6 +19,11 @@ install: libLcd.a
 	mv $^ ../lib
 	cp *.h ../h
 
+push:
+	git add .
+	git commit -m "adjustmentMade"
+	git push 
+
 clean:
 	rm -f libLcd.a *.o *.elf
 
